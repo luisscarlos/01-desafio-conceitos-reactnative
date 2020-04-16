@@ -13,11 +13,10 @@ import {
 
 export default function App() {
   const [repositories, setRepository] = useState([]);
-  const [likes, setLikes] = useState(0);
 
   useEffect(() => {
       api.get('repositories').then(response => {
-      console.log(response.data);
+      //console.log(response.data);
       setRepository(response.data);
     });
   }, []);
@@ -25,8 +24,20 @@ export default function App() {
   async function handleLikeRepository(id) {
     const response = await api.post(`repositories/${id}/like`);
 
-    const liked = response.data
-    
+    const likedRepository = response.data
+    console.log(`liked response ${likedRepository.title}`);
+
+    const repositoriesUpdate = repositories.map(repo => {
+      if (repo.id === id) {
+        console.log(`return liked repo ${likedRepository.title}`);
+        return likedRepository;
+      } else {
+        return repo;
+      }
+    });
+
+    setRepository(repositoriesUpdate);
+    console.log(`repo updated ${repositoriesUpdate}`);
   }
 
   return (
@@ -42,10 +53,11 @@ export default function App() {
                 <Text style={styles.repository}>{repo.title}</Text>
 
                 <View style={styles.techsContainer}>
-                  <Text keyExtractor={repo.id} style={styles.tech}>
-                    {repo.techs}
-                    {console.log(repo.title)}
-                  </Text>
+                  {repo.techs.map(tech => (
+                    <Text key={tech} style={styles.tech}>
+                      {tech}
+                    </Text>
+                  ))}
                 </View>
 
                 <View style={styles.likesContainer}>
@@ -53,7 +65,7 @@ export default function App() {
                     style={styles.likeText}
                     testID={`repository-likes-${repo.id}`}
                   >
-                    {`${repo.likes} curtidas`}
+                    {repo.likes} curtida{repo.likes > 1 ? 's' : ''}
                   </Text>
                 </View>
 
@@ -68,38 +80,6 @@ export default function App() {
             </>
           )}
         />
-
-        {/* <View
-          <Text style={styles.repository}>Repository 1</Text>
-
-          <View style={styles.techsContainer}>
-            <Text style={styles.tech}>
-              ReactJS
-            </Text>
-            <Text style={styles.tech}>
-              Node.js
-            </Text>
-          </View>
-
-          <View style={styles.likesContainer}>
-            <Text
-              style={styles.likeText}
-              // Remember to replace "1" below with repository ID: {`repository-likes-${repository.id}`}
-              testID={`repository-likes-1`}
-            >
-              3 curtidas
-            </Text>
-          </View>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => handleLikeRepository(1)}
-            // Remember to replace "1" below with repository ID: {`like-button-${repository.id}`}
-            testID={`like-button-1`}
-          >
-            <Text style={styles.buttonText}>Curtir</Text>
-          </TouchableOpacity>
-        </View> */}
       </SafeAreaView>
     </>
   );
@@ -115,6 +95,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     backgroundColor: "#fff",
     padding: 20,
+    borderRadius: 8
   },
   repository: {
     fontSize: 32,
@@ -153,5 +134,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     backgroundColor: "#7159c1",
     padding: 15,
+    borderRadius: 8,
   },
 });
