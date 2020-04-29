@@ -5,7 +5,7 @@
 
 Desenvolver uma aplicação para armazenar repositórios de um portfólio, que irá permitir a criação, listagem, atualização e remoção dos repositórios, e além disso permitir que os repositórios possam receber "likes".
 
-<img src="assets/app.PNG" width="250" height="500">
+<img src="https://github.com/luisscarlos/bootcamp-desafio-conceitos-react-native/blob/master/assets/app.png" width="250" height="500">
 
 ### Passos para executar o desafio desenvolvido:
 -  Clonar o projeto
